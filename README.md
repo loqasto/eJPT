@@ -16,7 +16,7 @@
      
    ## nmap
    
-   Ping scan (nos dice que hosts están activos):
+   Ping scan (nos dice qué hosts están activos):
    
     nmap -sN IP
 
