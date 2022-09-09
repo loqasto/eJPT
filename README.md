@@ -2,6 +2,7 @@
  
    ## Routing
    
-    Para comprobar rutas en los diferentes SO:
-  
-    ![Captura](https://user-images.githubusercontent.com/111526713/189311660-8f49a3fc-0eef-4806-820f-4dfedb757486.PNG)
+ 
+ Para comprobar rutas en los diferentes SO:
+ 
+ ![Captura](https://user-images.githubusercontent.com/111526713/189312610-e48dce91-975b-490c-851c-26ba0be45d48.PNG)
