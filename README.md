@@ -279,10 +279,124 @@ consiguiendo os shell:
     hashcat64.exe -m 0 -a(ttack) 0 -D2 example.hash example.dict (-r rules)
    
   -m = seleccionamos el tipo de hash a crackear
+  
   -a = seleccionamos el tipo de ataque (0 = ataque de diccionario)
   
+ ## Netbios
  
+ Network Basic input output system (puertos comunes: 135,139,445)
+ 
+ Cuando vemos los recursos compartidos de red estamos utilizando NetBios, compartiendo:
+ 
+    - Hostname
+    - NetBios name
+    - Domain
+    - Network shares
+
+<img src="https://user-images.githubusercontent.com/111526713/189481022-f769b688-79cc-4696-9104-5f37cd3f5048.png" width="400" />
+
+    TCP = transmite datos hacia y desde Windows shares
+    NB datagram UDP = Lista compartidos y máquinas
+    NB names UDP = Encuentra Workgroups
+    
+  Compartidos en Windows:
+  
+    \\computer_name\C$ -> accede a un volumen
+    \\computer_name\admin$ -> windows installation dir
+    \\computer_name\IPC$ -> inter-process communication
+    
+ ## Null sessions
+ 
+ **Explota una vulnerabilidad de autenticación de Windows administrative shares, que permite al atacante conectarse a un compartido local o remoto SIN autentificación.**
+ 
+  Enumerar recursos compartidos en Windows:
+  
+    nbstat /?
+    nbstat -A <ip>
+    
+    <00> = workstation
+    UNIQUE = una sola IP asignada
+    <20> = file sharing service levantado y corriendo
+    
+    Para enumerarlo:
+    
+    net view <ip>
+    
+    nmblookup -A <ip>
+    
+  Para conectarnos
+  
+    net use \\ip\IPC$ " /u:"
+    
+  Enumerar recursos compartidos en Windows:
+  
+    smbclient -L //ip -N
+    
+  -L servicios disponibles
+  
+  -N no pregunta por passwords
+  
+  Nos mostrará también los compartidos administrativos como IPC$, C$, admin$.
+  
+  Para conectarnos:
+  
+    smbclient //IP/IPC$ -N
+    
+ ###### Otras herramientas
+ 
+   Enum (Win):
    
+     enum -S ip -> servicios
+     enum -U ip -> users
+     enum -P ip -> network auth attack
+   
+  Enum4linux 
+  
+ Verbose mode:
+  
+     enum4linux -v target-ip
+     
+Ejecuta todo excepto el ataque guess de diccionario:
+
+    enum4linux -a target-ip
     
+Lista nombres de usuario (RestrictAnonymous = 0):
+
+    enum4linux -U target-ip
+	
+Si hemos logrado obtener credenciales, podemos obtener una lista completa de usuarios independientemente de la opción RestrictAnonymous:
+
+    enum4linux -u administrator 
+    -p password -U target-ip
+	
+Pulls usernames from the default RID range (500-550,1000-1050)
+
+    enum4linux -r target-ip
     
+Pull usernames using a custom RID range
+
+    enum4linux -R 600-660 target-ip
     
+Lista grupos:
+
+    enum4linux -G target-ip
+    
+Lista Windows shares:
+
+    enum4linux -S target-ip
+	
+Ataque de diccionario:
+ 
+    enum4linux -s shares.txt target-ip
+
+Muestra información del SO:
+
+    enum4linux -o target-ip
+
+Información sobre impresoras compartidas:
+
+    enum4linux -i target-ip
+	
+  
+     
+  
