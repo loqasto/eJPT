@@ -358,7 +358,7 @@ consiguiendo os shell:
      
 Ejecuta todo excepto el ataque guess de diccionario:
 
-    enum4linux -a target-ip
+    enum4linux -A target-ip
     
 Lista nombres de usuario (RestrictAnonymous = 0):
 
@@ -368,14 +368,6 @@ Si hemos logrado obtener credenciales, podemos obtener una lista completa de usu
 
     enum4linux -u administrator 
     -p password -U target-ip
-	
-Pulls usernames from the default RID range (500-550,1000-1050)
-
-    enum4linux -r target-ip
-    
-Pull usernames using a custom RID range
-
-    enum4linux -R 600-660 target-ip
     
 Lista grupos:
 
@@ -385,7 +377,7 @@ Lista Windows shares:
 
     enum4linux -S target-ip
 	
-Ataque de diccionario:
+Ataque de diccionario para Windows shares:
  
     enum4linux -s shares.txt target-ip
 
@@ -397,6 +389,30 @@ Información sobre impresoras compartidas:
 
     enum4linux -i target-ip
 	
+Muestra la politica de constraseñas:
+
+    enum4linux -P ip
   
-     
-  
+ ###### Samrdump
+ 
+ Nos da información sobre SAM (Security account manager), username y UID de la cuenta SAM:
+ 
+ 	/usr/share/doc/python-impacket-doc/examples/
+	./samrdump.py
+	python samrdump.py IP
+	
+###### NMAP
+
+    nmap -script=smb-enum-shares ip
+    nmap -script=smb-enum-users ip
+    nmap -script=smb-brute
+    
+## ARPSPOOF
+
+Activamos Linux Kernel para transformar Linux en router:
+
+    echo 1 > /proc/sys/net/ipv4/ip_forward
+    
+Lanzamos arpspoof:
+
+    arpspoof -i <interfaz> -t <target> -r <host>
