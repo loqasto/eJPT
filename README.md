@@ -45,6 +45,10 @@
   
     nmap -Pn -O <target>
     
+  Para escanear puertos y sacar servicios asociados:
+  
+    nmap -sC -sV -pP1,P2,P3 <ip>
+    
   -Pn = evitamos ping scan
   
   También podemos utilizar --osscan-limit que irá más rápido y mostrará solamente objetos prometedores. También --osscan-guess cuando nmap no puede detectar nada pero muestra lo que más se aproxima:
