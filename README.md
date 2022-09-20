@@ -315,6 +315,11 @@ consiguiendo os shell:
  
  **Explota una vulnerabilidad de autenticación de Windows administrative shares, que permite al atacante conectarse a un compartido local o remoto SIN autentificación.**
  
+ Enumeramos recursos y vulns con nmap:
+ 
+    nmap --script=smb-enum-users,smb-os-discovery,smb-enum-shares,smb-enum-groups,smb-enum-domains 10.10.10.10 -p 135,139,445 
+    nmap -p445 --script=smb-vuln-* 10.10.10.10 
+ 
   Enumerar recursos compartidos en Windows:
   
     nbstat /?
