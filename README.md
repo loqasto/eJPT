@@ -203,7 +203,7 @@ Necesitamos un código SQL dinámico, por ejemplo:
     sqlmap -u url 
            -b=database_banner
            --tables= nos muestra las tablas de la BD
-           --current_db dbname -columns
+           --current_db dbname --columns
            --dump=passwords
            --technique
            -p= parámtero a inyectar
