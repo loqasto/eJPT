@@ -358,7 +358,7 @@ consiguiendo os shell:
   
     net use \\ip\IPC$ " /u:"
     
-  Enumerar recursos compartidos en Windows:
+  Enumerar recursos compartidos en Windows desde Linux:
   
     smbclient -L //ip -N
     
@@ -368,9 +368,13 @@ consiguiendo os shell:
   
   Nos mostrará también los compartidos administrativos como IPC$, C$, admin$.
   
-  Para conectarnos:
+  Para conectarnos sin password:
   
     smbclient //IP/IPC$ -N
+   
+  Para ver usuarios desde Linux:
+  
+    smbmap -H <ip>
     
  ###### Otras herramientas
  
@@ -410,6 +414,9 @@ Lista Windows shares:
 Ataque de diccionario para Windows shares:
  
     enum4linux -s shares.txt target-ip
+    
+    enum4linux -s ~/Desktop/wordlists/100-common-passwords.txt <ip>
+
 
 Muestra información del SO:
 
